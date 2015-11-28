@@ -3,18 +3,13 @@ package model
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/gocraft/dbr"
-	"gopkg.in/go-playground/validator.v5"
 	"time"
 )
 
-func init() {
-	validator.New("validate", validator.BakedInValidators)
-}
-
 type Member struct {
-	Number      int64  `db:"number" json:"number" validate:"required"`
-	Name        string `db:"name" json:"name" validate:"required"`
-	DateCreated int64  `db:"date_created" json:"createdAt" validate:"-"`
+	Number      int64  `db:"number" json:"number"`
+	Name        string `db:"name" json:"name"`
+	DateCreated int64  `db:"date_created" json:"createdAt"`
 }
 
 func NewMember(member int64, name string) *Member {
