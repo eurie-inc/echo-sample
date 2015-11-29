@@ -10,6 +10,7 @@ import (
 
 func CreateMember(c *echo.Context) error {
 
+
 	var j model.Member
 	c.Bind(&j)
 
@@ -17,7 +18,7 @@ func CreateMember(c *echo.Context) error {
 
 	member := model.NewMember(j.Number, j.Name)
 
-	if err := member.CreateMember(tx); err != nil {
+	if err := member.SaveMember(tx); err != nil {
 		c.Error(err)
 		return err
 	} else {
@@ -32,7 +33,7 @@ func GetMember(c *echo.Context) error {
 	tx := c.Get("Tx").(*dbr.Tx)
 
 	var member model.Member
-	if err := member.GetMember(tx, number); err != nil {
+	if err := member.LoadMember(tx, number); err != nil {
 		c.Error(err)
 		return err
 	} else {
@@ -45,7 +46,7 @@ func GetMembers(c *echo.Context) error {
 	tx := c.Get("Tx").(*dbr.Tx)
 	var members model.Members
 
-	if err := members.GetMembers(tx); err != nil {
+	if err := members.LoadMembers(tx); err != nil {
 		c.Error(err)
 		return err
 	} else {

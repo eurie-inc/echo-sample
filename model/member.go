@@ -20,7 +20,7 @@ func NewMember(member int64, name string) *Member {
 	}
 }
 
-func (m *Member) CreateMember(tx *dbr.Tx) error {
+func (m *Member) SaveMember(tx *dbr.Tx) error {
 
 	_, err := tx.InsertInto("member").
 		Columns("number", "name", "date_created").
@@ -34,7 +34,7 @@ func (m *Member) CreateMember(tx *dbr.Tx) error {
 	return err
 }
 
-func (m *Member) GetMember(tx *dbr.Tx, number int64) error {
+func (m *Member) LoadMember(tx *dbr.Tx, number int64) error {
 
 	_, err := tx.Select("*").
 		From("member").
@@ -49,7 +49,7 @@ func (m *Member) GetMember(tx *dbr.Tx, number int64) error {
 
 type Members []Member
 
-func (m *Members) GetMembers(tx *dbr.Tx) error {
+func (m *Members) LoadMembers(tx *dbr.Tx) error {
 
 	_, err := tx.Select("*").
 		From("member").
