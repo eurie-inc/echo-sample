@@ -26,9 +26,9 @@ func Init() *echo.Echo {
 	// Routes
 	v1 := e.Group("/api/v1")
 	{
-		v1.Post("/members", api.PostMember())
-		v1.Get("/members", api.GetMembers())
-		v1.Get("/members/:id", api.GetMember())
+		v1.POST("/members", api.PostMember())
+		v1.GET("/members", api.GetMembers())
+		v1.GET("/members/:id", api.GetMember())
 	}
 	return e
 }
