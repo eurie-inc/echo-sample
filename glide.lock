@@ -1,0 +1,40 @@
+hash: e0c851003b0c8d831833f236890b81db07e5e6cfb00858e4b2bc110293221652
+updated: 2016-06-05T19:41:24.590223227+09:00
+imports:
+- name: github.com/dgrijalva/jwt-go
+  version: 9b486c879bab3fde556ce8c27d9a2bb05d5b2c60
+- name: github.com/go-sql-driver/mysql
+  version: 3654d25ec346ee8ce71a68431025458d52a38ac0
+- name: github.com/gocraft/dbr
+  version: 78b5b74da0b8bcbe167cc4c55d3383b6893848c3
+  subpackages:
+  - dialect
+- name: github.com/labstack/echo
+  version: 9f23055745e1cc8348b1613f06cc2fbdc81c5a3e
+  subpackages:
+  - middleware
+  - engine
+  - log
+- name: github.com/labstack/gommon
+  version: b5f03e345acd2096591b6f738cb8d2b9b3231c50
+  subpackages:
+  - log
+  - bytes
+  - color
+- name: github.com/mattn/go-colorable
+  version: 9056b7a9f2d1f2d96498d6d146acd1f9d5ed3d59
+- name: github.com/mattn/go-isatty
+  version: 56b76bdf51f7708750eac80fa38b952bb9f32639
+- name: github.com/Sirupsen/logrus
+  version: f3cfb454f4c209e6668c95216c4744b8fddb2356
+- name: github.com/valyala/fasttemplate
+  version: 3b874956e03f1636d171bda64b130f9135f42cff
+- name: golang.org/x/net
+  version: c4c3ea71919de159c9e246d7be66deb7f0a39a58
+  subpackages:
+  - context
+- name: golang.org/x/sys
+  version: 076b546753157f758b316e59bcb51e6807c04057
+  subpackages:
+  - unix
+devImports: []
