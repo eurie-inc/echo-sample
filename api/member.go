@@ -1,55 +1,59 @@
 package api
 
 import (
+	"strconv"
+
+	"github.com/Sirupsen/logrus"
 	"github.com/eurie-inc/echo-sample/model"
 	"github.com/gocraft/dbr"
 	"github.com/labstack/echo"
-	"net/http"
-	"strconv"
+	"github.com/valyala/fasthttp"
 )
 
-func CreateMember(c *echo.Context) error {
+func PostMember() echo.HandlerFunc {
+	return func(c echo.Context) (err error) {
 
+		m := new(model.Member)
+		c.Bind(&m)
 
-	var j model.Member
-	c.Bind(&j)
+		tx := c.Get("Tx").(*dbr.Tx)
 
-	tx := c.Get("Tx").(*dbr.Tx)
+		member := model.NewMember(m.Number, m.Name)
 
-	member := model.NewMember(j.Number, j.Name)
-
-	if err := member.SaveMember(tx); err != nil {
-		c.Error(err)
-		return err
-	} else {
-		return c.JSON(http.StatusCreated, member)
+		if err := member.Save(tx); err != nil {
+			logrus.Debug(err)
+			return echo.NewHTTPError(fasthttp.StatusInternalServerError)
+		}
+		return c.JSON(fasthttp.StatusCreated, member)
 	}
 }
 
-func GetMember(c *echo.Context) error {
+func GetMember() echo.HandlerFunc {
+	return func(c echo.Context) (err error) {
 
-	number, _ := strconv.ParseInt(c.Param("id"), 0, 64)
+		number, _ := strconv.ParseInt(c.Param("id"), 0, 64)
 
-	tx := c.Get("Tx").(*dbr.Tx)
+		tx := c.Get("Tx").(*dbr.Tx)
 
-	var member model.Member
-	if err := member.LoadMember(tx, number); err != nil {
-		c.Error(err)
-		return err
-	} else {
-		return c.JSON(http.StatusOK, member)
+		member := new(model.Member)
+		if err := member.Load(tx, number); err != nil {
+			logrus.Debug(err)
+			return echo.NewHTTPError(fasthttp.StatusNotFound, "Member does not exists.")
+		}
+		return c.JSON(fasthttp.StatusOK, member)
 	}
 }
 
-func GetMembers(c *echo.Context) error {
+func GetMembers() echo.HandlerFunc {
+	return func(c echo.Context) (err error) {
+		tx := c.Get("Tx").(*dbr.Tx)
 
-	tx := c.Get("Tx").(*dbr.Tx)
-	var members model.Members
+		members := new(model.Members)
+		if err = members.Load(tx); err != nil {
+			logrus.Debug(err)
+			return echo.NewHTTPError(fasthttp.StatusNotFound, "Member does not exists.")
+		}
 
-	if err := members.LoadMembers(tx); err != nil {
-		c.Error(err)
-		return err
-	} else {
-		return c.JSON(http.StatusOK, members)
+		return c.JSON(fasthttp.StatusOK, members)
 	}
 }
