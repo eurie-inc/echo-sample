@@ -3,7 +3,6 @@ package model
 import (
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/gocraft/dbr"
 )
 
@@ -24,40 +23,26 @@ func NewMember(member int64, name string) *Member {
 func (m *Member) Save(tx *dbr.Tx) error {
 
 	_, err := tx.InsertInto("member").
-		Columns("number", "name", "date_created").
+		Columns("number", "name", "created_at").
 		Record(m).
 		Exec()
-
-	if err != nil {
-		logrus.Error("Error")
-	}
 
 	return err
 }
 
 func (m *Member) Load(tx *dbr.Tx, number int64) error {
 
-	_, err := tx.Select("*").
+	return tx.Select("*").
 		From("member").
 		Where("number = ?", number).
-		Load(m)
-
-	if err != nil {
-		logrus.Error("Error")
-	}
-	return err
+		LoadStruct(m)
 }
 
 type Members []Member
 
 func (m *Members) Load(tx *dbr.Tx) error {
 
-	_, err := tx.Select("*").
+	return tx.Select("*").
 		From("member").
-		Load(m)
-
-	if err != nil {
-		logrus.Error("Error")
-	}
-	return err
+		LoadStruct(m)
 }

@@ -15,5 +15,5 @@ func init() {
 func main() {
 
 	router := route.Init()
-	router.Run(fasthttp.New(":8080"))
+	router.Run(fasthttp.New(":8888"))
 }
