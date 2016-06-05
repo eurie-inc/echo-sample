@@ -1,15 +1,15 @@
 package api
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/eurie-inc/echo-sample/model"
 	"github.com/gocraft/dbr"
 	"github.com/labstack/echo"
-	"net/http"
-	"strconv"
 )
 
-func CreateMember(c *echo.Context) error {
-
+func CreateMember(c echo.Context) error {
 
 	var j model.Member
 	c.Bind(&j)
@@ -18,7 +18,7 @@ func CreateMember(c *echo.Context) error {
 
 	member := model.NewMember(j.Number, j.Name)
 
-	if err := member.SaveMember(tx); err != nil {
+	if err := member.Save(tx); err != nil {
 		c.Error(err)
 		return err
 	} else {
@@ -26,14 +26,14 @@ func CreateMember(c *echo.Context) error {
 	}
 }
 
-func GetMember(c *echo.Context) error {
+func GetMember(c echo.Context) error {
 
 	number, _ := strconv.ParseInt(c.Param("id"), 0, 64)
 
 	tx := c.Get("Tx").(*dbr.Tx)
 
 	var member model.Member
-	if err := member.LoadMember(tx, number); err != nil {
+	if err := member.Load(tx, number); err != nil {
 		c.Error(err)
 		return err
 	} else {
@@ -41,12 +41,12 @@ func GetMember(c *echo.Context) error {
 	}
 }
 
-func GetMembers(c *echo.Context) error {
+func GetMembers(c echo.Context) error {
 
 	tx := c.Get("Tx").(*dbr.Tx)
 	var members model.Members
 
-	if err := members.LoadMembers(tx); err != nil {
+	if err := members.Load(tx); err != nil {
 		c.Error(err)
 		return err
 	} else {

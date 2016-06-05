@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/eurie-inc/echo-sample/route"
 	"github.com/Sirupsen/logrus"
+	"github.com/eurie-inc/echo-sample/route"
+	"github.com/labstack/echo/engine/fasthttp"
 )
 
 func init() {
@@ -14,5 +15,5 @@ func init() {
 func main() {
 
 	router := route.Init()
-	router.Run(":8080")
+	router.Run(fasthttp.New(":8080"))
 }

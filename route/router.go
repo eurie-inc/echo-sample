@@ -20,7 +20,7 @@ func Init() *echo.Echo {
 	e.Use(echoMw.Gzip())
 
 	// Set Custom MiddleWare
-	e.Use(myMw.TxMiddleware(db.Init()))
+	e.Use(myMw.TransactionHandler(db.Init()))
 
 	// Routes
 	v1 := e.Group("/api/v1")

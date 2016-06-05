@@ -6,26 +6,28 @@ import (
 	"github.com/labstack/echo"
 )
 
-func TxMiddleware(session *dbr.Session) echo.MiddlewareFunc {
-	return func(h echo.HandlerFunc) echo.HandlerFunc {
-		return func(c *echo.Context) (err error) {
-			tx, err := session.Begin()
+const (
+	TxKey = "Tx"
+)
 
-			if err != nil {
-				logrus.Error(err)
-			} else {
-				c.Set("Tx", tx)
+func TransactionHandler(db *dbr.Session) echo.MiddlewareFunc {
 
-				if err := h(c); err != nil {
-					tx.Rollback()
-					logrus.Error("Rollback")
-					c.Error(err)
-				} else {
-					logrus.Debug("Commit")
-					tx.Commit()
-				}
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return echo.HandlerFunc(func(c echo.Context) error {
+
+			tx, _ := db.Begin()
+
+			c.Set(TxKey, tx)
+
+			if err := next(c); err != nil {
+				tx.Rollback()
+				logrus.Debug("Transction Rollback: ", err)
+				return err
 			}
-			return
-		}
+			logrus.Debug("Transaction Commit")
+			tx.Commit()
+
+			return nil
+		})
 	}
 }

@@ -1,26 +1,27 @@
 package model
 
 import (
+	"time"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/gocraft/dbr"
-	"time"
 )
 
 type Member struct {
-	Number      int64  `db:"number" json:"number"`
-	Name        string `db:"name" json:"name"`
-	DateCreated int64  `db:"date_created" json:"createdAt"`
+	Number    int64  `json:"number"`
+	Name      string `json:"name"`
+	CreatedAt int64  `json:"createdAt"`
 }
 
 func NewMember(member int64, name string) *Member {
 	return &Member{
-		Number:      member,
-		Name:        name,
-		DateCreated: time.Now().UnixNano(),
+		Number:    member,
+		Name:      name,
+		CreatedAt: time.Now().Unix(),
 	}
 }
 
-func (m *Member) SaveMember(tx *dbr.Tx) error {
+func (m *Member) Save(tx *dbr.Tx) error {
 
 	_, err := tx.InsertInto("member").
 		Columns("number", "name", "date_created").
@@ -34,7 +35,7 @@ func (m *Member) SaveMember(tx *dbr.Tx) error {
 	return err
 }
 
-func (m *Member) LoadMember(tx *dbr.Tx, number int64) error {
+func (m *Member) Load(tx *dbr.Tx, number int64) error {
 
 	_, err := tx.Select("*").
 		From("member").
@@ -49,7 +50,7 @@ func (m *Member) LoadMember(tx *dbr.Tx, number int64) error {
 
 type Members []Member
 
-func (m *Members) LoadMembers(tx *dbr.Tx) error {
+func (m *Members) Load(tx *dbr.Tx) error {
 
 	_, err := tx.Select("*").
 		From("member").
