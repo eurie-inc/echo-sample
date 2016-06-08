@@ -18,7 +18,7 @@ func PostMember() echo.HandlerFunc {
 
 		tx := c.Get("Tx").(*dbr.Tx)
 
-		member := model.NewMember(m.Number, m.Name)
+		member := model.NewMember(m.Number, m.Name, m.Position)
 
 		if err := member.Save(tx); err != nil {
 			logrus.Debug(err)
@@ -48,8 +48,9 @@ func GetMembers() echo.HandlerFunc {
 	return func(c echo.Context) (err error) {
 		tx := c.Get("Tx").(*dbr.Tx)
 
+		position := c.QueryParam("position")
 		members := new(model.Members)
-		if err = members.Load(tx); err != nil {
+		if err = members.Load(tx, position); err != nil {
 			logrus.Debug(err)
 			return echo.NewHTTPError(fasthttp.StatusNotFound, "Member does not exists.")
 		}

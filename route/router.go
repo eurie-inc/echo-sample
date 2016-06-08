@@ -15,9 +15,13 @@ func Init() *echo.Echo {
 
 	e.Debug()
 
-	// Set MiddleWare
+	// Set Bundle MiddleWare
 	e.Use(echoMw.Logger())
 	e.Use(echoMw.Gzip())
+	e.Use(echoMw.CORSWithConfig(echoMw.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAcceptEncoding},
+	}))
 	e.SetHTTPErrorHandler(handler.JSONHTTPErrorHandler)
 
 	// Set Custom MiddleWare
